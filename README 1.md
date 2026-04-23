@@ -137,7 +137,7 @@ In order to complete the lift and shift procedure and have the code running succ
               table: hlosses_test.ml_powerthefts
   
   🛠️ ️conf/hedno/catalog/raw/catalog.yml:
-    - We changed the path to which we store intermediate parquet files from ```bash ${hedno_path}/${date}/${phase}/.../<file_name>.parquet``` to ```bash ${hedno_path}/output/.../<file_name>.parquet```.
+    - We changed the path to which we store intermediate parquet files from ``` ${hedno_path}/${date}/${phase}/.../<file_name>.parquet``` to ``` ${hedno_path}/output/.../<file_name>.parquet```.
       Eg:
         
             # OLD ❌
