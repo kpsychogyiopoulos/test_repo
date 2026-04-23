@@ -114,8 +114,8 @@ In order to complete the lift and shift procedure and have the code running succ
     - We changed the data sources to point to datahub tables in watsonx.data instead of csv files.
       Eg.:
           ```
-  
-            old ❌ 
+
+          old ❌ 
                       _spark_input_dataset: &spark_input_dataset
                         type: spark.SparkDataSet
                         file_format: csv
@@ -124,15 +124,15 @@ In order to complete the lift and shift procedure and have the code running succ
                           sep: "|"
                           encoding: utf-8
 
-            new ✅    _spark_table_dataset: &spark_table_dataset
+          new ✅    _spark_table_dataset: &spark_table_dataset
                         type: spark.SparkHiveDataSet
                         database: dev_datahub_silver
-  
-            old ❌
+
+          old ❌
                       powerthefts:
                         <<: *spark_input_dataset
                         filepath: ${hedno_raw}/${date}/PowerTheft.csv
-            new ✅
+          new ✅
                       powerthefts:
                         <<: *spark_table_dataset
                         table: hlosses_test.ml_powerthefts
