@@ -113,26 +113,26 @@ In order to complete the lift and shift procedure and have the code running succ
   🛠️conf/hedno/catalog/raw/catalog.yml:
     - We changed the data sources to point to datahub tables in watsonx.data instead of csv files.
       Eg.:
-            old ➡️ ```python 
+            old ➡️ ```yaml 
                       _spark_input_dataset: &spark_input_dataset
                         type: spark.SparkDataSet
                         file_format: csv
                         load_args:
                           header: True
                           sep: "|"
-                          encoding: utf-8```
+                          encoding: utf-8
             
               new ➡️    _spark_table_dataset: &spark_table_dataset
                         type: spark.SparkHiveDataSet
                         database: dev_datahub_silver
   
               old ➡️
-                      ```python powerthefts:
+                      powerthefts:
                         <<: *spark_input_dataset
-                        filepath: ${hedno_raw}/${date}/PowerTheft.csv ```
+                        filepath: ${hedno_raw}/${date}/PowerTheft.csv
               new ➡️
-                      ```python powerthefts:
+                      powerthefts:
                         <<: *spark_table_dataset
-                        table: hlosses_test.ml_powerthefts ```
+                        table: hlosses_test.ml_powerthefts```
 
 
