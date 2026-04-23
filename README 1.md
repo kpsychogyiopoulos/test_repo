@@ -113,7 +113,6 @@ In order to complete the lift and shift procedure and have the code running succ
   🛠️conf/hedno/catalog/raw/catalog.yml:
     - We changed the data sources to point to datahub tables in watsonx.data instead of csv files.
       Eg.:
-          ```
           
             # OLD ❌
             _spark_input_dataset: &spark_input_dataset
@@ -136,5 +135,5 @@ In order to complete the lift and shift procedure and have the code running succ
             powerthefts:
               <<: *spark_table_dataset
               table: hlosses_test.ml_powerthefts
-          ```
+          
 
