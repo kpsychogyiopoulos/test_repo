@@ -113,7 +113,8 @@ In order to complete the lift and shift procedure and have the code running succ
   🛠️conf/hedno/catalog/raw/catalog.yml:
     - We changed the data sources to point to datahub tables in watsonx.data instead of csv files.
       Eg.:
-          ```yml
+          ```
+  
             old ❌ 
                       _spark_input_dataset: &spark_input_dataset
                         type: spark.SparkDataSet
@@ -122,7 +123,7 @@ In order to complete the lift and shift procedure and have the code running succ
                           header: True
                           sep: "|"
                           encoding: utf-8
-            
+
             new ✅    _spark_table_dataset: &spark_table_dataset
                         type: spark.SparkHiveDataSet
                         database: dev_datahub_silver
