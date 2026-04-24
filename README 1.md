@@ -6,7 +6,7 @@ The project is located in IBM Cloud Pack for Data, Projects and is named as ```d
 
 
 ## Table of Contents  
-- [ProjectStructure](#Project Structure)
+- [ProjectStructure](#project-structure)
 - [Installation & Library Imports](#installation)   
 - [Environment Variables Initialisation](#data)
 - [Spark-Session Orchestration](#usage)
