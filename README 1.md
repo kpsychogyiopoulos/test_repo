@@ -7,11 +7,11 @@ The project is located in IBM Cloud Pack for Data, Projects and is named as ```d
 
 ## Table of Contents  
 - [ProjectStructure](#project-structure)
-- [Installation & Library Imports](#installation)   
-- [Environment Variables Initialisation](#data)
-- [Spark-Session Orchestration](#usage)
-- [Kedro module Execution](#results)  
-- [Source Code Modifications](...)
+- [Installation & Library Imports](#installation--library-imports)   
+- [Environment Variables Initialisation](#environment-variables-initialisation)
+- [Spark-Session Orchestration](#spark-session-orchestration)
+- [Kedro module Execution](#kedro-module-execution)  
+- [Source Code Modifications](#source-code-modifications)
   
 ## Project Structure
 
