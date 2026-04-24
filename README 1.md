@@ -107,7 +107,7 @@ In order to complete the "lift and shift" procedure and have the code running su
 
 - Edited the following yml files to include the correct paths to the new data sources:
   🛠️conf/hedno/globals: 
-    - path change from ```bash /mnt/misetl/powerthefts/prl/``` to  ```bash /home/spark/project/assets/data_asset/PT_20260301_v2/``` which is the path in which all the project related data files exist.
+    - path change from ``` /mnt/misetl/powerthefts/prl/``` to  ``` /home/spark/project/assets/data_asset/PT_20260301_v2/``` which is the path in which all the project related data files exist.
   
   🛠️conf/hedno/catalog/raw/catalog.yml:
     - We changed the data sources to point to datahub tables in watsonx.data instead of csv files.
