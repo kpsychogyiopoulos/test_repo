@@ -149,5 +149,48 @@ In order to complete the lift and shift procedure and have the code running succ
             requests:
               <<: *spark_dataset
               filepath: ${hedno_path}/output/02_intermediate/requests_updated.parquet
-          
+  
+  Edited the following source code to process correctly the data files and parameters read:      
+  🛠️ src/hedno_losses/pipelines/preprocessing/nodes/consumptions.py (line 245):
+    - We edited the code so that we ensure that a date provided as text is converted into a functional date object so the pipeline can safely perform time-based calculations.
+            
+            # OLD ❌
+            current_date = params["current_date"]
+      
+            # NEW ✅
+            current_date = params["current_date"]
+      
+            if isinstance(current_date, str):
+                import pandas as pd
+                current_date = pd.to_datetime(current_date)
+    
+    🛠️ src/hedno_losses/pipelines/preprocessing/nodes/request_events.py (line 48):
+    - Function: get_request_types()
+      - This change standardizes the data schema by converting mixed-case or uppercase column names into a consistent lowercase format.
 
+            # OLD ❌
+            df_joined = pre_requests.join(
+              request_type, pre_requests.REQUEST_TYPE_ID == request_type.RequestTypeID, "left"
+            )
+          
+            # Update the REQUEST_TYPE column
+            df_result = df_joined.withColumn(
+                "REQUEST_TYPE",
+                F.when(
+                    F.col("REQUEST_TYPE").isNull(), F.col("RequestTypeDescriptionEn")
+                ).otherwise(F.col("REQUEST_TYPE")),
+            )
+            
+            # NEW ✅
+            df_joined = pre_requests.join(
+              request_type, "request_type_id", "left"
+            )
+          
+            # Update the REQUEST_TYPE column
+            df_result = df_joined.withColumn(
+                "request_type",
+                F.when(
+                    F.col("request_type").isNull(), F.col("request_type_description_en")
+                ).otherwise(F.col("request_type")),
+            )
+      
