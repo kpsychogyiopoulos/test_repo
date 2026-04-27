@@ -58,11 +58,10 @@ To initiate the pipeline within the JupyterLab environment, we use the %run magi
 
 ```bash 
 %run /home/spark/project/assets/jupyterlab/jira-master/src/jira/__main__.py <command> 
-
-get_data: Triggers the Jira API extraction and local staging.
-
-import_db: Initiates the Spark-based ingestion into the Lakehouse.
 ```
+__get_data__: Triggers the Jira API extraction and local staging.
+
+__import_db__: Initiates the Spark-based ingestion into the Lakehouse.
 
 ---
 
