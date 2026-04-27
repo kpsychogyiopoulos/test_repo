@@ -22,7 +22,7 @@ _project_data_assets/data_asset_:
 
 _project_git_repo/dev-datahub-jira/assets/jupyterlab_:
 - __jira-master/__ : Hosts the source code and modular Python scripts required for system operation. Performs the ETL pipeline on Jira.
-- __run_hedno_losses.ipynb__ : Orchestrates the execution of the Python modules contained within the __jira-master__ directory to run the end-to-end pipeline.
+- __run_jira.ipynb__ : Orchestrates the execution of the Python modules contained within the __jira-master__ directory to run the end-to-end pipeline.
 
 ---
 
