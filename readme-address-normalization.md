@@ -55,11 +55,11 @@ We run the functions that create a SparkSession factory designed for Cloud Pak f
 ## Code execution
 
 After initializing the global Spark session, the instance is injected into ```cli.py``` (line 99). This ensures that the main execution entry point has access to a managed Spark context for distributed data operations.
-To initiate the pipeline within the JupyterLab environment, we use the %run magic command to execute the primary entry point:
+To initiate the pipeline within the JupyterLab environment, we use the %run magic command to execute the primary entry point. Indicatively:
 
 ```bash 
 %cd /home/spark/project/assets/jupyterlab/address-normalization-etl-master/src
-%run -m address_normalization_etl extract-batch --table ermh_csservhs_all --encrypt
+%run -m address_normalization_etl extract-batch --table <table_name> --encrypt
 ```
 
 ---
