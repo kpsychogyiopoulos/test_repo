@@ -69,7 +69,7 @@ To initiate the pipeline within the JupyterLab environment, we use the %run magi
 To facilitate the "lift and shift" migration and ensure successful operation within the CP4D runtime, the following architectural adjustments and environment-specific configurations were implemented:
 
 - Edited file cli.py to use the existing spark session and pass it as a parameter to the functions ```extractor.run()```:
-  🛠address-normalization-etl/src/address_normalization_etl/cli.py (lines 99, 104): 
+  - 🛠address-normalization-etl/src/address_normalization_etl/cli.py (lines 99, 104): 
               
               # OLD ❌
               extractor.run(start_date=start, end_date=end, tables=tables or None)
@@ -81,7 +81,7 @@ To facilitate the "lift and shift" migration and ensure successful operation wit
                   
 
 - Switched the table sources in class TableConfig of the configuration file to point to Datahub dev_datahub_bronze001:
-  🛠️address-normalization-etl/src/address_normalization_etl/config.py:
+  - 🛠️address-normalization-etl/src/address_normalization_etl/config.py:
       E.g.:
         
               # OLD ❌
@@ -92,7 +92,7 @@ To facilitate the "lift and shift" migration and ensure successful operation wit
               
 
   - Performed the following code changes in:
-    🛠️address-normalization-etl/src/address_normalization_etl/extractor.py:
+    - 🛠️address-normalization-etl/src/address_normalization_etl/extractor.py:
     - Function: _extract_range() 
              
              # OLD ❌
@@ -106,91 +106,28 @@ To facilitate the "lift and shift" migration and ensure successful operation wit
              ...
              self._extract_partial(spark, table_name, start_date, end_date, output_root)
   
-      - Function: _extract_partial()
+    - Function: _extract_partial()
               
              # NEW ✅
              def _extract_partial(self, spark: SparkSession, table_name: str, start_date: date, end_date: date,
-                           output_root: Path):
-                    LOGGER.info(f"Starting High-Speed extraction: {table_name}")
-                    table_config = self.config.table_map[table_name]
-          
-                    try:
-                        # 1. Build the source query
-                        columns_str = ", ".join(table_config.columns)
-                        filters = list(table_config.filters) if table_config.filters else []
-                        filters.append(f"{table_config.date_column} >= '{start_date.strftime('%Y-%m-%d')}'")
-                        filters.append(f"{table_config.date_column} < '{end_date.strftime('%Y-%m-%d')}'")
-          
-                        where_clause = f"WHERE {' AND '.join(filters)}"
-                        staging_sql = f"SELECT {columns_str} FROM {table_config.source} {where_clause}"
-          
-                        # 2. Load into DataFrame (No loop, no LIMIT)
-                        df = spark.sql(staging_sql)
-          
-                        # 3. Encryption (Applied to the whole distributed DataFrame)
-                        if self.encrypt and table_config.encrypt_columns:
-                            print("Encrypting selected columns...")
-                            df = encrypt_spark_columns(
-                                df,
-                                table_config.encrypt_columns,
-                                self.config.resolved_anonymization_key
-                            )
-          
-                        # 4. Optimized Write
-                        # We use repartition to ensure we don't overwhelm memory during encryption
-                        # and to create reasonably sized parquet files.
-                        file_path = output_root / table_name
-                        absolute_path = f"/home/spark/project/assets/data_asset/{file_path}"
-                        os.makedirs(absolute_path, exist_ok=True)
-          
-                        print(f"Writing data to {absolute_path}...")
-          
-                        # .coalesce(1) if you MUST have one file, or .repartition(n) for speed
-                        (df.write
-                         .mode("overwrite")
-                         .parquet(f"file://{absolute_path}"))
-          
-                        print(f"Extraction complete for {table_name}")
-          
-                    except Exception as e:
-                        LOGGER.error(f"High-speed extraction failed: {e}")
-                        raise
-      
-        - Function: __extract_full()
-            
-              # OLD ❌
-              def _extract_full(self, conn_str: str, table_name: str, output_root: Path):
-                    """Extract full table data."""
-                    LOGGER.info(f"Extracting full table: {table_name}")
-                    table_config = self.config.table_map[table_name]
-          
-                    try:
-                        sql = self._build_sql_query(table_config)
-                        self._extract_with_pagination(conn_str, sql, table_name, output_root)
-          
-                    except Exception as e:
-                        LOGGER.error(f"Failed to extract table {table_name}: {e}")
-                        raise
-        
-              # NEW ✅
-              def _extract_full(self, spark: SparkSession, table_name: str, output_root: Path):
-                  """
-                  High-performance full extraction.
-                  Eliminates sequential batching in favor of distributed parallel processing.
-                  """
-                  LOGGER.info(f"Starting distributed extraction for: {table_name}")
+                         output_root: Path):
+                  LOGGER.info(f"Starting High-Speed extraction: {table_name}")
                   table_config = self.config.table_map[table_name]
           
-                  filters = list(table_config.filters) if table_config.filters else []
-          
-                  where_clause = f"WHERE {' AND '.join(filters)}" if filters else ""
-                  columns_str = ", ".join(table_config.columns)
-          
-                  source_sql = f"SELECT {columns_str} FROM {table_config.source} {where_clause}"
-          
                   try:
-                      df = spark.sql(source_sql)
-                      
+                      # 1. Build the source query
+                      columns_str = ", ".join(table_config.columns)
+                      filters = list(table_config.filters) if table_config.filters else []
+                      filters.append(f"{table_config.date_column} >= '{start_date.strftime('%Y-%m-%d')}'")
+                      filters.append(f"{table_config.date_column} < '{end_date.strftime('%Y-%m-%d')}'")
+          
+                      where_clause = f"WHERE {' AND '.join(filters)}"
+                      staging_sql = f"SELECT {columns_str} FROM {table_config.source} {where_clause}"
+          
+                      # 2. Load into DataFrame (No loop, no LIMIT)
+                      df = spark.sql(staging_sql)
+          
+                      # 3. Encryption (Applied to the whole distributed DataFrame)
                       if self.encrypt and table_config.encrypt_columns:
                           print("Encrypting selected columns...")
                           df = encrypt_spark_columns(
@@ -199,19 +136,82 @@ To facilitate the "lift and shift" migration and ensure successful operation wit
                               self.config.resolved_anonymization_key
                           )
           
-          
-                      # We target a directory. Spark writes multiple files into this directory in parallel.
-                      file_dir = output_root / table_name
-                      absolute_path = f"/home/spark/project/assets/data_asset/{file_dir}"
+                      # 4. Optimized Write
+                      # We use repartition to ensure we don't overwhelm memory during encryption
+                      # and to create reasonably sized parquet files.
+                      file_path = output_root / table_name
+                      absolute_path = f"/home/spark/project/assets/data_asset/{file_path}"
                       os.makedirs(absolute_path, exist_ok=True)
-                      print(f"Executing distributed write to: {absolute_path}")
           
+                      print(f"Writing data to {absolute_path}...")
+          
+                      # .coalesce(1) if you MUST have one file, or .repartition(n) for speed
                       (df.write
                        .mode("overwrite")
                        .parquet(f"file://{absolute_path}"))
           
-                      LOGGER.info(f"Successfully extracted {table_name}")
+                      print(f"Extraction complete for {table_name}")
           
                   except Exception as e:
-                      LOGGER.error(f"Distributed extraction failed for {table_name}: {e}")
+                      LOGGER.error(f"High-speed extraction failed: {e}")
                       raise
+      
+      - Function: __extract_full()
+            
+            # OLD ❌
+            def _extract_full(self, conn_str: str, table_name: str, output_root: Path):
+                  """Extract full table data."""
+                  LOGGER.info(f"Extracting full table: {table_name}")
+                  table_config = self.config.table_map[table_name]
+          
+                  try:
+                      sql = self._build_sql_query(table_config)
+                      self._extract_with_pagination(conn_str, sql, table_name, output_root)
+          
+                  except Exception as e:
+                      LOGGER.error(f"Failed to extract table {table_name}: {e}")
+                      raise
+        
+            # NEW ✅
+            def _extract_full(self, spark: SparkSession, table_name: str, output_root: Path):
+                """
+                High-performance full extraction.
+                Eliminates sequential batching in favor of distributed parallel processing.
+                """
+                LOGGER.info(f"Starting distributed extraction for: {table_name}")
+                table_config = self.config.table_map[table_name]
+          
+                filters = list(table_config.filters) if table_config.filters else []
+          
+                where_clause = f"WHERE {' AND '.join(filters)}" if filters else ""
+                columns_str = ", ".join(table_config.columns)
+          
+                source_sql = f"SELECT {columns_str} FROM {table_config.source} {where_clause}"
+          
+                try:
+                    df = spark.sql(source_sql)
+                      
+                    if self.encrypt and table_config.encrypt_columns:
+                        print("Encrypting selected columns...")
+                        df = encrypt_spark_columns(
+                            df,
+                            table_config.encrypt_columns,
+                            self.config.resolved_anonymization_key
+                        )
+          
+          
+                    # We target a directory. Spark writes multiple files into this directory in parallel.
+                    file_dir = output_root / table_name
+                    absolute_path = f"/home/spark/project/assets/data_asset/{file_dir}"
+                    os.makedirs(absolute_path, exist_ok=True)
+                    print(f"Executing distributed write to: {absolute_path}")
+          
+                    (df.write
+                     .mode("overwrite")
+                     .parquet(f"file://{absolute_path}"))
+          
+                    LOGGER.info(f"Successfully extracted {table_name}")
+          
+                except Exception as e:
+                    LOGGER.error(f"Distributed extraction failed for {table_name}: {e}")
+                    raise
