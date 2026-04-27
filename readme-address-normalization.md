@@ -156,62 +156,62 @@ To facilitate the "lift and shift" migration and ensure successful operation wit
                     LOGGER.error(f"High-speed extraction failed: {e}")
                     raise
       
-    - Function: __extract_full()
+  - Function: __extract_full()
             
-          # OLD ❌
-          def _extract_full(self, conn_str: str, table_name: str, output_root: Path):
-                 """Extract full table data."""
-                 LOGGER.info(f"Extracting full table: {table_name}")
-                 table_config = self.config.table_map[table_name]
+        # OLD ❌
+        def _extract_full(self, conn_str: str, table_name: str, output_root: Path):
+               """Extract full table data."""
+               LOGGER.info(f"Extracting full table: {table_name}")
+               table_config = self.config.table_map[table_name]
             
-                 try:
-                    sql = self._build_sql_query(table_config)
-                    self._extract_with_pagination(conn_str, sql, table_name, output_root)
+               try:
+                  sql = self._build_sql_query(table_config)
+                  self._extract_with_pagination(conn_str, sql, table_name, output_root)
             
-                 except Exception as e:
-                    LOGGER.error(f"Failed to extract table {table_name}: {e}")
-                    raise
+               except Exception as e:
+                  LOGGER.error(f"Failed to extract table {table_name}: {e}")
+                  raise
           
-          # NEW ✅
-          def _extract_full(self, spark: SparkSession, table_name: str, output_root: Path):
-                """
-                High-performance full extraction.
-                Eliminates sequential batching in favor of distributed parallel processing.
-                """
-                LOGGER.info(f"Starting distributed extraction for: {table_name}")
-                table_config = self.config.table_map[table_name]
+        # NEW ✅
+        def _extract_full(self, spark: SparkSession, table_name: str, output_root: Path):
+              """
+              High-performance full extraction.
+              Eliminates sequential batching in favor of distributed parallel processing.
+              """
+              LOGGER.info(f"Starting distributed extraction for: {table_name}")
+              table_config = self.config.table_map[table_name]
             
-                filters = list(table_config.filters) if table_config.filters else []
+              filters = list(table_config.filters) if table_config.filters else []
             
-                where_clause = f"WHERE {' AND '.join(filters)}" if filters else ""
-                columns_str = ", ".join(table_config.columns)
+              where_clause = f"WHERE {' AND '.join(filters)}" if filters else ""
+              columns_str = ", ".join(table_config.columns)
             
-                source_sql = f"SELECT {columns_str} FROM {table_config.source} {where_clause}"
+              source_sql = f"SELECT {columns_str} FROM {table_config.source} {where_clause}"
             
-                try:
-                    df = spark.sql(source_sql)
+              try:
+                  df = spark.sql(source_sql)
                         
-                    if self.encrypt and table_config.encrypt_columns:
-                        print("Encrypting selected columns...")
-                        df = encrypt_spark_columns(
-                            df,
-                            table_config.encrypt_columns,
-                            self.config.resolved_anonymization_key
-                        )
+                  if self.encrypt and table_config.encrypt_columns:
+                      print("Encrypting selected columns...")
+                      df = encrypt_spark_columns(
+                          df,
+                          table_config.encrypt_columns,
+                          self.config.resolved_anonymization_key
+                      )
             
             
-                    # We target a directory. Spark writes multiple files into this directory in parallel.
-                    file_dir = output_root / table_name
-                    absolute_path = f"/home/spark/project/assets/data_asset/{file_dir}"
-                    os.makedirs(absolute_path, exist_ok=True)
-                    print(f"Executing distributed write to: {absolute_path}")
+                  # We target a directory. Spark writes multiple files into this directory in parallel.
+                  file_dir = output_root / table_name
+                  absolute_path = f"/home/spark/project/assets/data_asset/{file_dir}"
+                  os.makedirs(absolute_path, exist_ok=True)
+                  print(f"Executing distributed write to: {absolute_path}")
             
-                    (df.write
-                     .mode("overwrite")
-                     .parquet(f"file://{absolute_path}"))
+                  (df.write
+                   .mode("overwrite")
+                   .parquet(f"file://{absolute_path}"))
             
-                    LOGGER.info(f"Successfully extracted {table_name}")
+                  LOGGER.info(f"Successfully extracted {table_name}")
             
-                except Exception as e:
-                    LOGGER.error(f"Distributed extraction failed for {table_name}: {e}")
-                    raise
+              except Exception as e:
+                  LOGGER.error(f"Distributed extraction failed for {table_name}: {e}")
+                  raise
