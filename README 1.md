@@ -11,7 +11,9 @@ The system ingests data from Datahub tables and is maintained as a project in IB
 - [Spark-Session Orchestration](#spark-session-orchestration)
 - [Kedro module Execution](#kedro-module-execution)  
 - [Source Code Modifications](#source-code-modifications)
-  
+
+---
+
 ## Project Structure
 
 _project_data_assets/data_asset_:
@@ -23,6 +25,8 @@ _project_data_assets/data_asset_:
 _project_git_repo/datahub-hedno-losses/assets/jupyterlab_:
 - __hedno-losses-master/__ : Hosts the source code and modular Python scripts required for system operation. These modules define the computational logic used across the preprocessing, training, and inference phases.
 - __run_hedno_losses.ipynb__ : Orchestrates the execution of the Python modules contained within the __hedno-losses-master__ directory to run the end-to-end pipeline.
+
+---
 
 ## Installation & Library Imports
   
@@ -63,6 +67,7 @@ In the following shells we import:
 - Libraries required for standard operation.
 - Libraries required to set up a Spark Session designed for CP4D and watsonx.data
 
+---
 
 ## Environment Variables Initialisation
 
@@ -78,11 +83,13 @@ os.environ["current_date"] = "<YYYY-MM-DD>"
 
 In the shell above we pass the respective dates. Phase parameter can be --inference or --train.
 
+---
 
 ## Spark-Session Orchestration
 
 Having imported the environment variables, next we run the functions that create a SparkSession factory designed for Cloud Pak for Data and watsonx.data, which automates the creation and management of Iceberg sessions integrated with ADLS and MinIO storage. Finally a spark session is configured and set ready for use.
 
+---
 
 ## Kedro module execution
 
@@ -100,6 +107,7 @@ Finally:
 
 - __Kedro Execution__: The orchestration engine that initializes the Kedro framework and tunes the Spark environment for distributed execution. It creates a KedroSession using the specific hedno configuration environment and triggers the actual execution of the pipeline.
 
+---
 
 ## Source Code Modifications
 
