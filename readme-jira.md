@@ -7,10 +7,9 @@ It is maintained as a project in IBM Cloud Pak for Data under the name: ```dev-d
 
 ## Table of Contents  
 - [ProjectStructure](#project-structure)
-- [Installation & Library Imports](#installation--library-imports)   
-- [Environment Variables Initialisation](#environment-variables-initialisation)
+- [Installation & Library Imports](#installation--library-imports)
 - [Spark-Session Orchestration](#spark-session-orchestration)
-- [Kedro module Execution](#kedro-module-execution)  
+- [Code execution](#kedro-module-execution)  
 - [Source Code Modifications](#source-code-modifications)
 
 ---
