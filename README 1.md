@@ -1,7 +1,7 @@
 # HEDNO-LOSSES
   
 Developed using the Kedro framework, this project facilitates the preprocessing, training, inference, and clustering stages required for HEDNO’s power theft detection system.
-The system ingests data from Datahub tables and is maintained as a project in IBM Cloud Pak for Data as ```dev-datahub-hedno-losses ```.
+The system ingests data from Datahub tables and is maintained as a project in IBM Cloud Pak for Data under the name: ```dev-datahub-hedno-losses ```.
 
 
 ## Table of Contents  
