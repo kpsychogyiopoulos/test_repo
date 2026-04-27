@@ -16,6 +16,8 @@ It is maintained as a project in IBM Cloud Pak for Data under the name: ```dev-d
 
 ## Project Structure
 
+Use the following assets containing the latest version of the source code (as of __27/04/2026__) to apply further changes.
+
 _project_data_assets/data_asset_:
 - __address-normalization-etl-master.zip__ : This project asset is stored within the CP4D persistent volume. It contains the refactored code base.
 - __requirements.txt__: The file containing all python dependencies needed to be installed prior to code execution.
