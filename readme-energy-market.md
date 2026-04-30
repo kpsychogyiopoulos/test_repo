@@ -1,8 +1,8 @@
-# JIRA
+# ENERGY-MARKET
   
-This project implements an ETL pipeline to migrate project management metadata from Jira Atlassian into Datahub table ```jira_tickets```.
+This project implements an automated pipeline for the ingestion, transformation, and persistence of energy market datasets. The system programmatically retrieves source Excel files, performs multi-file consolidation, and executes a deduplication logic to ensure high data integrity before synchronizing the cleaned records with the ```energy_market``` table in Datahub.
 
-It is maintained as a project in IBM Cloud Pak for Data under the name: ```dev-datahub-jira ```.
+It is maintained as a project in IBM Cloud Pak for Data under the name: ```dev-datahub-energy-market ```.
 
 
 ## Table of Contents  
@@ -16,12 +16,14 @@ It is maintained as a project in IBM Cloud Pak for Data under the name: ```dev-d
 
 ## Project Structure
 
+Use the following assets containing the latest version of the source code (as of __27/04/2026__) to apply further changes.
+
 _project_data_assets/data_asset_:
 - __energy-market-master.zip__ : This project asset is deployed within the CP4D persistent volume. It contains the refactored code base.
 - __requirements.txt__: The file containing all python dependencies needed to be installed prior to code execution.
 
 _project_git_repo/dev-datahub-jira/assets/jupyterlab_:
-- __energy-market-master/__ : Hosts source code and modular Python scripts required for system operation. Performs the ETL pipeline on the data retrieved from ```enexgroup``` loading them in Datahub silver, schema ```nrgmarket``` and table ```energy_market```.
+- __energy-market-master/__ : Hosts the source code and modular Python scripts required for system operation. Performs the ETL pipeline on the data retrieved from ```enexgroup``` loading them in Datahub silver, schema ```nrgmarket``` and table ```energy_market```.
 - __run_energy_market.ipynb__ : Orchestrates the execution of the Python modules contained within the __energy-market-master__ directory to run the end-to-end pipeline.
 
 ---
