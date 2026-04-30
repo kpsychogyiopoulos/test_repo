@@ -16,19 +16,25 @@ It is maintained as a project in IBM Cloud Pak for Data under the name: ```dev-d
 
 ## Project Structure
 
+Use the following assets containing the latest version of the source code (as of __27/04/2026__) to apply further changes.
+
 _project_data_assets/data_asset_:
 - __jira-master.zip__ : This project asset is deployed within the CP4D persistent volume. It contains the refactored code base.
 - __requirements.txt__: The file containing all python dependencies needed to be installed prior to code execution.
 
 _project_git_repo/dev-datahub-jira/assets/jupyterlab_:
 - __jira-master/__ : Hosts the source code and modular Python scripts required for system operation. Performs the ETL pipeline on Jira.
-- __run_jira.ipynb__ : Orchestrates the execution of the Python modules contained within the __jira-master__ directory to run the end-to-end pipeline.
+- __run_hedno_losses.ipynb__ : Orchestrates the execution of the Python modules contained within the __jira-master__ directory to run the end-to-end pipeline.
 
 ---
 
 ## Installation & Library Imports
   
-To run this project, you need to use runtime environment with Python 3.11 and Spark 3.5. The libraries are installed using the requirements.txt file.
+To run this project, you need to use runtime environment with Python 3.11 / Spark 3.5 and the following resources:
+    
+    4 Executors: 4 vCPU and 8 GB RAM, Driver: 2 vCPU and 16 GB RAM. 
+    
+The libraries are installed using the requirements.txt file.
 
 
 You can install the required libraries running the initial notebook shell that includes the command:  
