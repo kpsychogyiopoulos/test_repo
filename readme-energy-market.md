@@ -30,7 +30,11 @@ _project_git_repo/dev-datahub-jira/assets/jupyterlab_:
 
 ## Installation & Library Imports
   
-To run this project, you need to use runtime environment with Python 3.11 and Spark 3.5. The libraries are installed using the requirements.txt file.
+To run this project, you need to use runtime environment with Python 3.11 / Spark 3.5 and the following resources:
+    
+    4 Executors: 4 vCPU and 8 GB RAM, Driver: 2 vCPU and 16 GB RAM. 
+    
+The libraries are installed using the requirements.txt file.
 
 
 You can install the required libraries running the initial notebook shell that includes the command:  
